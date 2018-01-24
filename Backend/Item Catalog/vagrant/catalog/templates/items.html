@@ -1,0 +1,71 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class = 'flash'>
+  {% with messages = get_flashed_messages() %}
+        {% if messages %}
+      <ul>
+          {% for message in messages %}
+              <li> <strong> {{ message }} </strong> </li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div class="row block">
+  <div class="col-md-2 categories">
+    <h3> Categories </h3>
+    <ul>
+      {% for i in categories %}
+        <li>
+          <a href="{{url_for('showItems', category_id = i.id)}}">{{i.name}}</a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <div class="col-md-2 padding-none">
+      <a href="{{url_for('newCategory')}}">
+        <button class="btn btn-primary" id="new-category">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"> Add</span>
+        </button>
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <h3>{{category.name}} Items </h3>
+
+    {% if current.id == creator.id %}
+    <div class="col-md">
+      <a class="edit" href="{{url_for('editCategory', category_id = category.id)}}">
+        Edit
+      </a>
+      <a href="{{url_for('deleteCategory', category_id = category.id)}}">
+        Delete
+      </a>
+    </div>
+    {% endif %}
+    <div class="col-md-4 item-list">
+      <ul>
+        {% for i in items %}
+          <li>
+            <a href="{{url_for('showItem', category_id = category.id, item_id = i.id)}}">{{i.name}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      {% if current.id == creator.id %}
+        <div class="col-md-2 padding-none">
+          <a href="{{url_for('newItem', category_id = category.id)}}">
+            <button class="btn btn-primary" id="new-item">
+              <span class="glyphicon glyphicon-plus"> Add</span>
+            </button>
+          </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

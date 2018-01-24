@@ -1,0 +1,29 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="row block">
+  <div class="col-md-2 categories">
+    <h3> Categories </h3>
+    <ul>
+      {% for i in categories %}
+        <li>
+          <a href="{{url_for('showItems', category_id = i.id)}}">{{i.name}}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-md-8">
+    <h3>{{category.name}} Items </h3>
+    <div class="col-md-4 item-list">
+    <ul>
+      {% for i in items %}
+        <li>
+          <a href="{{url_for('showItem', category_id = category.id, item_id = i.id)}}">{{i.name}}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  </div>
+</div>
+{% endblock %}

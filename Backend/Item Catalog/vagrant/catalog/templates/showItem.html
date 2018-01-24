@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class = 'flash'>
+  {% with messages = get_flashed_messages() %}
+        {% if messages %}
+      <ul>
+          {% for message in messages %}
+              <li> <strong> {{ message }} </strong> </li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div class="row block item">
+  <div class="col-md">
+    <h3>{{item.name}}</h3>
+    <p>
+      {{item.description}}
+    </p>
+
+    {% if current.id == creator.id %}
+      <a class="edit" href="{{url_for('editItem', category_id=item.category_id, item_id=item.id )}}">
+        Edit
+      </a>
+      <a href="{{url_for('deleteItem',  category_id=item.category_id, item_id=item.id )}}">
+        Delete
+      </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

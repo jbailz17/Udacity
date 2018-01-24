@@ -1,0 +1,139 @@
+<head>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+  <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+  <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="row">
+    <div class="col-md-5"></div>
+    <div class="col-md-2" align="center">
+
+      <div id="result"></div>
+
+      <!-- Google Plus Sign-In-->
+      <br  />
+      <br  />
+      <br  />
+      <div id="signInButton">
+        <span class="g-signin"
+            data-scope="openid email"
+            data-clientid="361378076095-v27m0mi4h5p02uoqdtj2l22jn3tuh84m.apps.googleusercontent.com"
+            data-redirecturi="postmessage"
+            data-accesstype="offline"
+            data-cookiepolicy="single_host_origin"
+            data-callback="signInCallback"
+            data-approvalprompt="force">
+        </span>
+      </div>
+
+      <script>
+        function signInCallback(authResult) {
+          if (authResult['code']) {
+
+            // Hide the sign-in button.
+            $('#signinButton').attr('style', 'display: none');
+
+            //Ajax request containing one time code
+            $.ajax({
+              type: 'POST',
+              url: '/gconnect?state={{STATE}}',
+              processData: false,
+              data: authResult['code'],
+              contentType: 'application/octet-stream; charset=utf-8',
+              success: function(result) {
+
+                //Handle and verify the server response
+                if (result) {
+                  $('#result').html('Login Successful!</br>' + result + '</br>Redirecting...')
+                  setTimeout(function() {
+                    window.location.href = "/";
+                  }, 4000);
+
+                } else if (authResult['error']) {
+                  console.log('There was an error: ' + authResult['error']);
+                } else {
+                  $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                }
+              }
+            });
+          }
+        }
+      </script>
+      <!-- End google plus sign in-->
+
+      <!--Facebook Sign In-->
+      <script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            appID       : '549119892102572',
+            cookies     : true,
+
+            xfbml       : true,
+            version     : 'v2.2'
+          });
+        };
+
+        // Load SDK asynchronously
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=549119892102572';
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        //Obtain short time token and send ajax request.
+        function sendTokenToServer() {
+          var access_token = FB.getAuthResponse()['accessToken']
+          console.log('Welcome! Fetching your access token..');
+          console.log(access_token);
+          FB.api('/me', function(response) {
+            console.log('Successful login for: ' + response.name);
+            $.ajax({
+              type: 'POST',
+              url: '/fbconnect?state={{STATE}}',
+              processData: false,
+              data: access_token,
+              contentType: 'application/octet-stream; charset=utf-8',
+              success: function(result){
+                // Check server response
+                if (result) {
+                  $('#result').html('Login Successful!</br>' + result + '</br>Redirecting...');
+                  setTimeout(function() {
+                   window.location.href = "/";
+                  }, 4000);
+                } else {
+                  $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                }
+              }
+            });
+          });
+        }
+      </script>
+
+      <br />
+      <!--FB button-->
+      <div class="fb-login-button" data-max-rows="1" data-size="medium"
+           data-button-type="login_with" data-show-faces="false"
+           data-use-continue-as="false"
+           scope="public_profile,email"
+           onlogin="sendTokenToServer();">
+     </div>
+
+      <br />
+      <br />
+      <br />
+      <a href="{{url_for('showCatalog')}}">
+        <button class="btn btn-default delete">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true">
+          </span>
+          Back to Catalog
+        </button>
+      </a>
+    </div>
+  </div>
+</body>

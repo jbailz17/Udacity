@@ -1,0 +1,30 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="row banner menu">
+  <div class="col-md-11 col-md-offset-1 padding-none">
+    <h1>Edit Item</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 col-md-offset-1 padding-top">
+    <form action="#" method="post">
+      <div class="form-group">
+        <label for="name">Name: </label>
+        <div class="padding-bottom"></div>
+        <input type="text" maxlength="100" name="name" value="{{item.name}}" />
+        <div class="padding-bottom"></div>
+        <br />
+        <label for="description">Description: </label>
+        <div class="padding-bottom"></div>
+        <textarea maxlength="1000" name="description">{{item.description}}</textarea>
+        <div class="padding-bottom"></div>
+        <br />
+        <button class="btn btn-primary" type="submit">
+          <span class="glyphicon glyphicon-ok" aria-hidden="true"> Edit</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
